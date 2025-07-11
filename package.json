@@ -1,0 +1,23 @@
+{
+  "name": "qry-codes-vue-helloworld",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@andorsearch/qry-codes": "^1.0.0-alpha.1",
+    "@andorsearch/qry-codes-vue": "file:../qry-codes-vue/andorsearch-qry-codes-vue-1.0.0-alpha.1.tgz",
+    "vue": "^3.5.17"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "vue-tsc": "^2.2.12"
+  }
+}
