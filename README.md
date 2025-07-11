@@ -1,5 +1,13 @@
-# Vue 3 + TypeScript + Vite
+# QRy-codes-vue-helloworld Demo application
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This demo application shows how the @andorsearch/qry-codes-vue components can be used
+to cluster data.
+In this demo, news data can be clustered by similarity.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+
+![Demo screenshot](./assets/demo-screenshot.png)
+
+Learn more about binary vectors in the client:
+* See [QRy codes](https://qry.codes/)</a> for a searcher's guide.
+* See  [this video](https://www.youtube.com/watch?v=sJU_8mtzH7Y) for a developer's guide
+
