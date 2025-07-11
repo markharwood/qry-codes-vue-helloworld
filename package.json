@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@andorsearch/qry-codes": "^1.0.0-alpha.1",
-    "@andorsearch/qry-codes-vue": "file:../qry-codes-vue/andorsearch-qry-codes-vue-1.0.0-alpha.1.tgz",
+    "@andorsearch/qry-codes-vue": "^1.0.0-alpha.1",
     "vue": "^3.5.17"
   },
   "devDependencies": {
