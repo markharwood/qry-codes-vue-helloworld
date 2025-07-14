@@ -21,7 +21,7 @@ onMounted(() => {
   loadData()
 });
 
-function doSomethingOnClusterClick(clusterCentroid:Uint8Array){
+function doSomethingOnClusterClick(clusterCentroid: Uint8Array) {
   // Query a database here e.g.  https://www.elastic.co/search-labs/blog/bit-vectors-in-elasticsearch
   let hexString = bytesConversion.toHex(clusterCentroid)
   let myElasticsearchQuery = {
@@ -29,17 +29,21 @@ function doSomethingOnClusterClick(clusterCentroid:Uint8Array){
       "knn": {
         "field": "embedding",
         "query_vector": hexString
+      }
     }
   }
-}
-  console.log("Typically put application code here to query a vector database with the centroid of this cluster:", myElasticsearchQuery)
+  alert(
+    'Typically put application code here to query a vector database with the centroid of this cluster.\n' +
+    'Example elasticsearch query for this cluster:\n' +
+    JSON.stringify(myElasticsearchQuery, null, 4)
+  );
 }
 
 </script>
 
 <template>
   <div>
-    <h1>Binary vector clustering</h1>
+    <h1>Vue binary vector clustering</h1>
     <div v-if="myDocs.length == 0">
       Loading data...
     </div>
@@ -51,21 +55,21 @@ function doSomethingOnClusterClick(clusterCentroid:Uint8Array){
           number is the index of the vector passed in the "vectors" property above
         -->
       <template #clusterHeader="{ clusterMergedVector, clusterVectorIndices }">
-        <div @click="doSomethingOnClusterClick(clusterMergedVector)">
-          <BitVisualizer :data="clusterMergedVector" :cols="64" :cellSize="1" />
-        </div>
-        <div v-if="clusterVectorIndices.length > 1" class="headerText">
-          {{ clusterVectorIndices.length }} matches
-        </div>
-        <div v-if="clusterVectorIndices.length == 1" class="headerText">
-          1 match
-        </div>
+        <button class="myClusterHeaderButton" @click="doSomethingOnClusterClick(clusterMergedVector)">
+          <div >
+            <BitVisualizer :data="clusterMergedVector" :cols="64" :cellSize="1" />
+          </div>
+          <div v-if="clusterVectorIndices.length > 1" class="headerText">
+            {{ clusterVectorIndices.length }} matches
+          </div>
+          <div v-if="clusterVectorIndices.length == 1" class="headerText">
+            1 match
+          </div>
+        </button>
       </template>
 
       <!-- This slot allows the content of each element in a cluster to be rendered. 
-          The 'clusterMergedVector' is the average UInt8Array of all elements in the cluster.
-          The 'clusterVectorIndices' is an array of numbers representing the elements in the cluster where each
-          number is the index of the vector passed in the "vectors" property above
+          The 'vectorIndex' is the index of the vector passed in the "vectors" property above.
         -->
       <template #clusterElement="{ vectorIndex }">
         <div class="article">
@@ -78,10 +82,10 @@ function doSomethingOnClusterClick(clusterCentroid:Uint8Array){
       <p>Learn more about binary vectors in the client:</p>
       <ul>
         <li>See <a href="https://qry.codes/">QRy codes</a> for a searcher's guide.</li>
-        <li>See  <a href="https://www.youtube.com/watch?v=sJU_8mtzH7Y">this video</a> for a developer's guide</li>
+        <li>See <a href="https://www.youtube.com/watch?v=sJU_8mtzH7Y">this video</a> for a developer's guide</li>
       </ul>
     </div>
-    
+
   </div>
 </template>
 
@@ -114,7 +118,5 @@ function doSomethingOnClusterClick(clusterCentroid:Uint8Array){
 
 .qry-codes-cluster:hover {
   background-color: lightgray;
-
-
 }
 </style>
