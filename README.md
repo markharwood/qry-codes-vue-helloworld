@@ -1,6 +1,6 @@
 # QRy-codes-vue-helloworld Demo application
 
-This demo application shows how the @andorsearch/qry-codes-vue components can be used
+This demo application shows how the [@andorsearch/qry-codes-vue](https://github.com/markharwood/qry-codes-vue) components can be used
 to cluster data.
 In this demo, news data can be clustered by similarity.
 
