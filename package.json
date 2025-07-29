@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@andorsearch/qry-codes-vue": "^1.0.0-alpha.4",
+    "@andorsearch/qry-codes-vue": "^0.5.0",
     "vue": "^3.5.17"
   },
   "devDependencies": {
