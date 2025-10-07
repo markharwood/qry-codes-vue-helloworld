@@ -2,24 +2,59 @@
 import { ref, onMounted } from "vue"
 import { QryCluster, BitVisualizer } from '@andorsearch/qry-codes-vue'
 import { bytesConversion } from "@andorsearch/qry-codes"
+import { getHeuristic, computeSignificantTerms, detectAndSortSequences, simpleTokenizer, countDocFrequencies } from "@andorsearch/significant-terms";
+import type { WordUsageCounts } from "@andorsearch/significant-terms";
 
 
 
 
 let myDocs = ref<any[]>([])
-
+let allResultsWordUse :WordUsageCounts|undefined =undefined
 async function loadData() {
   const data = await fetch("/data/news_200.json");
-  const json = await data.json()
-  json.forEach(doc => {
+  const json = await data.json() as any[]
+  json.forEach(doc  => {
     // Replace simple string objects loaded in json with binary vectors
     doc["embedding"] = bytesConversion.fromBase64(doc["embedding"])
     myDocs.value.push(doc)
+    tokenStreamCache.push(simpleTokenizer(doc["headline"]))
   })
+  // Count words used
+  allResultsWordUse = countDocFrequencies(tokenStreamCache)
+
+
 }
 onMounted(() => {
   loadData()
 });
+
+
+
+let tokenStreamCache: string[][] = []
+
+function getKeywordsForCluster(indices: number[]) {
+  const totalBackgroundDocs = tokenStreamCache.length
+  if (!allResultsWordUse) {
+    return ''
+  }
+  let thisClusterTokenStreams = indices.map((id) => tokenStreamCache[id])
+
+  let topTerms = computeSignificantTerms(
+    thisClusterTokenStreams,
+    allResultsWordUse,
+    totalBackgroundDocs,
+    {  topN: Math.min(5,indices.length +1),scoringFunction: getHeuristic("solr"), minDocCount: Math.min(2, indices.length) }
+  ).filter(tt => tt.score > 0.05); //filter out low significance matches
+
+
+
+
+  let orderedTopTerms = detectAndSortSequences(topTerms, thisClusterTokenStreams, Math.min(3, indices.length))
+
+
+  const label = orderedTopTerms.map(termOrPhrase => termOrPhrase.join(" ")).join(", ");
+  return label
+}
 
 function doSomethingOnClusterClick(clusterCentroid: Uint8Array) {
   // Query a database here e.g.  https://www.elastic.co/search-labs/blog/bit-vectors-in-elasticsearch
@@ -56,7 +91,7 @@ function doSomethingOnClusterClick(clusterCentroid: Uint8Array) {
         -->
       <template #clusterHeader="{ clusterMergedVector, clusterVectorIndices }">
         <button class="myClusterHeaderButton" @click="doSomethingOnClusterClick(clusterMergedVector)">
-          <div >
+          <div>
             <BitVisualizer :data="clusterMergedVector" :cols="64" :cellSize="1" />
           </div>
           <div v-if="clusterVectorIndices.length > 1" class="headerText">
@@ -64,6 +99,9 @@ function doSomethingOnClusterClick(clusterCentroid: Uint8Array) {
           </div>
           <div v-if="clusterVectorIndices.length == 1" class="headerText">
             1 match
+          </div>
+          <div class="keywordSuggestions" style="display:block">
+            {{ getKeywordsForCluster(clusterVectorIndices) }}
           </div>
         </button>
       </template>
@@ -77,6 +115,7 @@ function doSomethingOnClusterClick(clusterCentroid: Uint8Array) {
         </div>
       </template>
     </QryCluster>
+
 
     <div style="text-align: left;">
       <p>Learn more about binary vectors in the client:</p>
@@ -104,6 +143,10 @@ function doSomethingOnClusterClick(clusterCentroid: Uint8Array) {
   border-style: solid;
   border-color: #f1f1f1;
   background-color: #efefef;
+  margin-bottom: 5px;
+}
+.keywordSuggestions {
+    font-style: italic;
 }
 
 .qry-codes-cluster {

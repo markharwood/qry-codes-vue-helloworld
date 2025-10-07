@@ -1,7 +1,7 @@
 {
   "name": "qry-codes-vue-helloworld",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.5.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@andorsearch/qry-codes-vue": "^0.5.0",
+    "@andorsearch/qry-codes-vue": "0.5.2",
+    "@andorsearch/significant-terms": "0.5.0",
     "vue": "^3.5.17"
   },
   "devDependencies": {
@@ -21,5 +22,4 @@
   },
   "author": "Mark Harwood",
   "license": "Apache-2.0"
-
 }
